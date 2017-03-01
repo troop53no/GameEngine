@@ -43,5 +43,10 @@ namespace GameEngine
         {
             return name;
         }
+
+        public void setName(string nname)
+        {
+            name = nname;
+        }
     }
 }

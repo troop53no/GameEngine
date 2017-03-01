@@ -90,13 +90,11 @@ namespace GameEngine
         private Random rand;//random event variable
         private bool isPaused;//pauses the game
         private int activeItem;//current menu item
-        private float music_vol;//volume of the music
-        private float sound_vol;//volume of the sound effects
-        KeyboardState prev_keystate;//the previous state of the keyboard
-        GamePadState prev_padstate;//the previous state of the gamepad
+        private decimal music_vol;//volume of the music
+        private decimal sound_vol;//volume of the sound effects
 
 
-        //images
+        //Images
         private Texture2D whalepic;//picture of our Happy Whale Studios Logo
         private Texture2D logopic;//picture of the Half-Life 3 Logo
         private Texture2D craftpic;//picture of the player's ship
@@ -145,6 +143,8 @@ namespace GameEngine
 
         //Input Stuff
         GamePadState gamePadState;//current state of the controller inputs
+        KeyboardState prev_keystate;//the previous state of the keyboard
+        GamePadState prev_padstate;//the previous state of the gamepad
         //MouseState mouseState;//current state of the mouse inputs
         //MouseState previousMouseState;//previous state of the mouse inputs
 
@@ -202,15 +202,15 @@ namespace GameEngine
             }
 
             //other initializations
-            music_vol = 1.0f;//set the music to full volume
-            sound_vol = 1.0f;//set the sound effects to full volume
+            music_vol = 1;//set the music to full volume
+            sound_vol = 1;//set the sound effects to full volume
             
             buttons_menu.Add(new Button(bwidth / 2 - 75, bheight / 2 + 30, "START"));
             buttons_menu.Add(new Button(bwidth / 2 - 75, bheight / 2 + 90, "OPTIONS"));
             buttons_menu.Add(new Button(bwidth / 2 - 75, bheight / 2 + 150, "CREDITS"));
 
-            buttons_options.Add(new Button(bwidth / 2 - 75, bheight / 2 + 30, ((int)music_vol).ToString()));
-            buttons_options.Add(new Button(bwidth / 2 - 75, bheight / 2 + 90, ((int)sound_vol).ToString()));
+            buttons_options.Add(new Button(bwidth / 2 - 75, bheight / 2 + 30, ((int)(music_vol*10)).ToString()));
+            buttons_options.Add(new Button(bwidth / 2 - 75, bheight / 2 + 90, ((int)(sound_vol*10)).ToString()));
             buttons_options.Add(new Button(bwidth / 2 - 75, bheight / 2 + 150, "BACK"));
         }
 
@@ -311,6 +311,7 @@ namespace GameEngine
                 {
                     current_theme = title2_s.CreateInstance();
                     current_theme.IsLooped = true;
+                    current_theme.Volume = (float)music_vol;
                     whale_s.Play();
                 }
                 //timer for the whale logo screen
@@ -339,7 +340,6 @@ namespace GameEngine
                     {
                         gameState = GameState.startScreen;
                         activeItem = 0;
-                        count = -10;
                     }
                 }
             }
@@ -374,12 +374,11 @@ namespace GameEngine
                         }
                     }
                 }
-
-                //TODO maybe re-add count == 0 && to these if statements
+                
                 //initializes the level
                 if (activeItem == 0 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed))
                 {
-                    if (activeItem == 0 && (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released))
+                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
                     {
                         score = 0;//inital score is set (default = 0)
                         level = 1;//initial level is set (default = 1)
@@ -395,6 +394,7 @@ namespace GameEngine
                         current_theme.Stop();
                         current_theme = theme3_s.CreateInstance();
                         current_theme.IsLooped = true;
+                        current_theme.Volume = (float)music_vol;
                         current_theme.Play();
                     }
                 }
@@ -402,7 +402,7 @@ namespace GameEngine
                 //go to options screen
                 if (activeItem == 1 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed))
                 {
-                    if (activeItem == 1 && (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released))
+                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
                     {
                         gameState = GameState.optionsScreen;
                         activeItem = 0;
@@ -412,7 +412,7 @@ namespace GameEngine
                 //go to credit screen
                 if (activeItem == 2 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed))
                 {
-                    if (activeItem == 2 && (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released))
+                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
                     {
                         gameState = GameState.creditScreen;
                     }
@@ -530,22 +530,23 @@ namespace GameEngine
                     //move the ship
                     craft.move();
                     checkCollisions();//sees if objects hit each other
-                    if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
+                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Pressed && gamePadState.Buttons.Start == ButtonState.Released))
+                        //if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
                     {
-                        if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                        {
+                        //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
+                        //{
                             isPaused = true;
-                        }
+                        //}
                     }
                 }
                 else
                 {
-                    if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
+                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Pressed && gamePadState.Buttons.Start == ButtonState.Released))
                     {
-                        if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                        {
+                        //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
+                        //{
                             isPaused = false;
-                        }
+                        //}
                     }
                 }
             }
@@ -557,10 +558,13 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
 
-                if (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.Start == ButtonState.Pressed)
+                if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
                 {
-                    gameState = GameState.startScreen;
-                    activeItem = 0;
+                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
+                    { 
+                        gameState = GameState.startScreen;
+                        activeItem = 0;
+                    }
                 }
             }
             else if (gameState == GameState.optionsScreen)
@@ -572,78 +576,95 @@ namespace GameEngine
                 }
 
                 //scroll through the button options
-                if (count == 0)
+                if (prev_keystate.IsKeyDown(Keys.S) || prev_padstate.DPad.Down == ButtonState.Pressed)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.S) || gamePadState.DPad.Down == ButtonState.Pressed)
+                    if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
                     {
                         activeItem++;
                         if (activeItem > buttons_options.Count - 1)
                         {
                             activeItem = 0;
                         }
-                        count = -10;
                     }
-                    else if (Keyboard.GetState().IsKeyDown(Keys.W) || gamePadState.DPad.Up == ButtonState.Pressed)
+                }
+                else if (prev_keystate.IsKeyDown(Keys.W) || prev_padstate.DPad.Up == ButtonState.Pressed)
+                {
+                    if (Keyboard.GetState().IsKeyUp(Keys.W) && gamePadState.DPad.Up == ButtonState.Released)
                     {
                         activeItem--;
                         if (activeItem < 0)
                         {
                             activeItem = buttons_options.Count - 1;
                         }
-                        count = -10;
                     }
-                }
-                else
-                {
-                    count++;
                 }
 
                 //raise the music volume
-                if(count == 0 && activeItem == 0 && (Keyboard.GetState().IsKeyDown(Keys.D) || gamePadState.DPad.Right == ButtonState.Pressed))
+                if(activeItem == 0 && (prev_keystate.IsKeyDown(Keys.D) || prev_padstate.DPad.Right == ButtonState.Pressed))
                 {
-                    music_vol += 0.1f;
-                    if(music_vol > 1.0f)
+                    if (Keyboard.GetState().IsKeyUp(Keys.D) && gamePadState.DPad.Right == ButtonState.Released)
                     {
-                        music_vol = 1.0f;
+                        music_vol += 0.1m;
+                        if (music_vol > 1)
+                        {
+                            music_vol = 1;
+                        }
+                        (buttons_options[0] as Button).setName(((int)(music_vol * 10)).ToString());
+                        current_theme.Volume = (float)music_vol;
                     }
                 }
 
                 //lower the music volume
-                if (count == 0 && activeItem == 0 && (Keyboard.GetState().IsKeyDown(Keys.A) || gamePadState.DPad.Left == ButtonState.Pressed))
+                if (activeItem == 0 && (prev_keystate.IsKeyDown(Keys.A) || prev_padstate.DPad.Left == ButtonState.Pressed))
                 {
-                    music_vol -= 0.1f;
-                    if (music_vol < 0.0f)
+                    if (Keyboard.GetState().IsKeyUp(Keys.A) && gamePadState.DPad.Left == ButtonState.Released)
                     {
-                        music_vol = 0.0f;
+                        music_vol -= 0.1m;
+                        if (music_vol < 0)
+                        {
+                            music_vol = 0;
+                        }
+                        (buttons_options[0] as Button).setName(((int)(music_vol * 10)).ToString());
+                        current_theme.Volume = (float)music_vol;
                     }
                 }
 
                 //raise the sound effect volume
-                if (count == 0 && activeItem == 1 && (Keyboard.GetState().IsKeyDown(Keys.D) || gamePadState.DPad.Right == ButtonState.Pressed))
+                if (activeItem == 1 && (prev_keystate.IsKeyDown(Keys.D) || prev_padstate.DPad.Right == ButtonState.Pressed))
                 {
-                    sound_vol += 0.1f;
-                    if (sound_vol > 1.0f)
+                    if (Keyboard.GetState().IsKeyUp(Keys.D) && gamePadState.DPad.Right == ButtonState.Released)
                     {
-                        sound_vol = 1.0f;
+                        sound_vol += 0.1m;
+                        if (sound_vol > 1)
+                        {
+                            sound_vol = 1;
+                        }
+                        (buttons_options[1] as Button).setName(((int)(sound_vol * 10)).ToString());
                     }
                 }
 
                 //lower the sound effect volume
-                if (count == 0 && activeItem == 1 && (Keyboard.GetState().IsKeyDown(Keys.A) || gamePadState.DPad.Left == ButtonState.Pressed))
+                if (activeItem == 1 && (prev_keystate.IsKeyDown(Keys.A) || prev_padstate.DPad.Left == ButtonState.Pressed))
                 {
-                    sound_vol -= 0.1f;
-                    if (sound_vol < 0.0f)
+                    if (Keyboard.GetState().IsKeyUp(Keys.A) && gamePadState.DPad.Left == ButtonState.Released)
                     {
-                        sound_vol = 0.0f;
+                        sound_vol -= 0.1m;
+                        if (sound_vol < 0)
+                        {
+                            sound_vol = 0;
+                        }
+                        (buttons_options[1] as Button).setName(((int)(sound_vol * 10)).ToString());
                     }
                 }
 
                 //go back to the menu
-                if (count == 0 && (activeItem == 2 && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed)) || Keyboard.GetState().IsKeyDown(Keys.Back) || gamePadState.Buttons.B == ButtonState.Pressed)
+                if ((activeItem == 2 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed)) || prev_keystate.IsKeyDown(Keys.Back) || prev_padstate.Buttons.B == ButtonState.Pressed)
                 {
-                    gameState = GameState.startScreen;
-                    activeItem = 0;
-                    count = -10;
+                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Back) && gamePadState.Buttons.B == ButtonState.Released)
+                    {
+                        gameState = GameState.startScreen;
+                        activeItem = 0;
+                    }
                 }
             }
 
@@ -897,6 +918,8 @@ namespace GameEngine
                     spriteBatch.Draw(starpic, new Rectangle((buttons_options[ii] as Button).getX() + 5, (buttons_options[ii] as Button).getY() + 5, 140, 40), Color.Black);
                     spriteBatch.DrawString(font, (buttons_options[ii] as Button).getName(), new Vector2(bwidth / 2, (buttons_options[ii] as Button).getY() + 25), butt_color, 0, (font.MeasureString((buttons_options[ii] as Button).getName()) / 2), 1.0f, SpriteEffects.None, 0.5f);
                 }
+                spriteBatch.DrawString(font, music_vol.ToString(), new Vector2(bwidth / 2, bheight / 2 - 150), Color.White, 0, (font.MeasureString(music_vol.ToString()) / 2), 1.0f, SpriteEffects.None, 0.5f);
+                spriteBatch.DrawString(font, sound_vol.ToString(), new Vector2(bwidth / 2, bheight / 2 - 50), Color.White, 0, (font.MeasureString(sound_vol.ToString()) / 2), 1.0f, SpriteEffects.None, 0.5f);
 
 
                 spriteBatch.End();
@@ -921,6 +944,7 @@ namespace GameEngine
                 current_theme.Stop();
                 current_theme = boss_s.CreateInstance();
                 current_theme.IsLooped = true;
+                current_theme.Volume = (float)music_vol;
                 current_theme.Play();
                 bossPower++;//increments the boss's power
                 boss = new ArrayList();//resets the boss array
@@ -1037,6 +1061,7 @@ namespace GameEngine
                                 current_theme.Stop();
                                 current_theme = theme3_s.CreateInstance();
                                 current_theme.IsLooped = true;
+                                current_theme.Volume = (float)music_vol;
                                 current_theme.Play();
                             }
                         }
@@ -1082,6 +1107,7 @@ namespace GameEngine
                             current_theme.Stop();
                             current_theme = title2_s.CreateInstance();
                             current_theme.IsLooped = true;
+                            current_theme.Volume = (float)music_vol;
                             current_theme.Play();
                         }
                         else {//...and you still have power, resets your ship and the aliens' positions
@@ -1113,6 +1139,7 @@ namespace GameEngine
                             current_theme.Stop();
                             current_theme = title2_s.CreateInstance();
                             current_theme.IsLooped = true;
+                            current_theme.Volume = (float)music_vol;
                             current_theme.Play();
                         }
                         else {//...and you still have power, resets your ship and the aliens' positions
@@ -1144,6 +1171,7 @@ namespace GameEngine
                                 current_theme.Stop();
                                 current_theme = title2_s.CreateInstance();
                                 current_theme.IsLooped = true;
+                                current_theme.Volume = (float)music_vol;
                                 current_theme.Play();
                             }
                             else {//...and you still have power, resets your ship and the aliens' positions
@@ -1200,6 +1228,7 @@ namespace GameEngine
                                 current_theme.Stop();
                                 current_theme = theme3_s.CreateInstance();
                                 current_theme.IsLooped = true;
+                                current_theme.Volume = (float)music_vol;
                                 current_theme.Play();
                             }
                         }
