@@ -333,11 +333,8 @@ namespace GameEngine
 
                 if ((prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.Start == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.Start == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                    //{
-                        gameState = GameState.startScreen;
-                        activeItem = 0;
-                    //}
+                    gameState = GameState.startScreen;
+                    activeItem = 0;
                 }
             }
             //if the game is on the start screen
@@ -351,68 +348,53 @@ namespace GameEngine
                 
                 if ((prev_keystate.IsKeyUp(Keys.S) && prev_padstate.DPad.Down == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.S) || gamePadState.DPad.Down == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
-                    //{ 
-                        activeItem++;
-                        if (activeItem > buttons_menu.Count - 1)
-                        {
-                            activeItem = 0;
-                        }
-                    //}
+                    activeItem++;
+                    if (activeItem > buttons_menu.Count - 1)
+                    {
+                        activeItem = 0;
+                    }
                 }
                 else if ((prev_keystate.IsKeyUp(Keys.W) && prev_padstate.DPad.Up == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.W) || gamePadState.DPad.Up == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.W) && gamePadState.DPad.Up == ButtonState.Released)
-                    //{
-                        activeItem--;
-                        if (activeItem < 0)
-                        {
-                            activeItem = buttons_menu.Count - 1;
-                        }
-                    //}
+                    activeItem--;
+                    if (activeItem < 0)
+                    {
+                        activeItem = buttons_menu.Count - 1;
+                    }
                 }
                 
                 //initializes the level
                 if ((activeItem == 0 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
-                    //{
-                        score = 0;//inital score is set (default = 0)
-                        level = 1;//initial level is set (default = 1)
-                        power = 3;//initial player power level is set (default = 3)
-                        bossPower = 0;//initial boss power level is set (default = 0?????or 1?????)
-                        shotsFired = 0;//initial number of shots fired is set (default = 0)
-                        shotsHit = 0;//initial numbers of shots hit is set (default = 0)
-                        aliensKilled = 0;//initial number of aliens killed (default = 0)
-                        initAliens();//initialize the alien ships
-                        craft = new Craft(power, 40, 340);//initialize the player's ship
-                        gameState = GameState.gameScreen;//transition to the playable game
+                    score = 0;//inital score is set (default = 0)
+                    level = 1;//initial level is set (default = 1)
+                    power = 3;//initial player power level is set (default = 3)
+                    bossPower = 0;//initial boss power level is set (default = 0?????or 1?????)
+                    shotsFired = 0;//initial number of shots fired is set (default = 0)
+                    shotsHit = 0;//initial numbers of shots hit is set (default = 0)
+                    aliensKilled = 0;//initial number of aliens killed (default = 0)
+                    initAliens();//initialize the alien ships
+                    craft = new Craft(power, 40, 340);//initialize the player's ship
+                    gameState = GameState.gameScreen;//transition to the playable game
 
-                        current_theme.Stop();
-                        current_theme = theme3_s.CreateInstance();
-                        current_theme.IsLooped = true;
-                        current_theme.Volume = (float)music_vol;
-                        current_theme.Play();
-                    //}
+                    current_theme.Stop();
+                    current_theme = theme3_s.CreateInstance();
+                    current_theme.IsLooped = true;
+                    current_theme.Volume = (float)music_vol;
+                    current_theme.Play();
                 }
 
                 //go to options screen
                 else if ((activeItem == 1 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
-                    //{
-                        gameState = GameState.optionsScreen;
-                        activeItem = 0;
-                    //}
+                    gameState = GameState.optionsScreen;
+                    activeItem = 0;
                 }
 
                 //go to credit screen
                 else if ((activeItem == 2 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
-                    //{
-                        gameState = GameState.creditScreen;
-                    //}
+                    gameState = GameState.creditScreen;
                 }
             }
             else if (gameState == GameState.gameScreen)
@@ -553,11 +535,8 @@ namespace GameEngine
 
                 if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                    //{ 
-                        gameState = GameState.startScreen;
-                        activeItem = 0;
-                    //}
+                    gameState = GameState.startScreen;
+                    activeItem = 0;
                 }
             }
             else if (gameState == GameState.optionsScreen)
@@ -571,93 +550,72 @@ namespace GameEngine
                 //scroll through the button options
                 if ((prev_keystate.IsKeyUp(Keys.S) && Keyboard.GetState().IsKeyDown(Keys.S)) || (prev_padstate.DPad.Down == ButtonState.Released && gamePadState.DPad.Down == ButtonState.Pressed))
                 {
-                    //if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
-                    //{
-                        activeItem++;
-                        if (activeItem > buttons_options.Count - 1)
-                        {
-                            activeItem = 0;
-                        }
-                    //}
-                }
-                else if (prev_keystate.IsKeyDown(Keys.W) || prev_padstate.DPad.Up == ButtonState.Pressed)
-                {
-                    if (Keyboard.GetState().IsKeyUp(Keys.W) && gamePadState.DPad.Up == ButtonState.Released)
+                    activeItem++;
+                    if (activeItem > buttons_options.Count - 1)
                     {
-                        activeItem--;
-                        if (activeItem < 0)
-                        {
-                            activeItem = buttons_options.Count - 1;
-                        }
+                        activeItem = 0;
+                    }
+                }
+                else if ((prev_keystate.IsKeyUp(Keys.W) && Keyboard.GetState().IsKeyDown(Keys.W)) || (prev_padstate.DPad.Up == ButtonState.Released && gamePadState.DPad.Up == ButtonState.Pressed))
+                {
+                    activeItem--;
+                    if (activeItem < 0)
+                    {
+                        activeItem = buttons_options.Count - 1;
                     }
                 }
 
                 //raise the music volume
-                if(activeItem == 0 && (prev_keystate.IsKeyDown(Keys.D) || prev_padstate.DPad.Right == ButtonState.Pressed))
+                if(activeItem == 0 && ((prev_keystate.IsKeyUp(Keys.D) && Keyboard.GetState().IsKeyDown(Keys.D)) || (prev_padstate.DPad.Right == ButtonState.Released && gamePadState.DPad.Right == ButtonState.Pressed)))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.D) && gamePadState.DPad.Right == ButtonState.Released)
+                    music_vol += 0.1m;
+                    if (music_vol > 1)
                     {
-                        music_vol += 0.1m;
-                        if (music_vol > 1)
-                        {
-                            music_vol = 1;
-                        }
-                        (buttons_options[0] as Button).setName(((int)(music_vol * 10)).ToString());
-                        current_theme.Volume = (float)music_vol;
+                        music_vol = 1;
                     }
+                    (buttons_options[0] as Button).setName(((int)(music_vol * 10)).ToString());
+                    current_theme.Volume = (float)music_vol;
                 }
 
                 //lower the music volume
-                if (activeItem == 0 && (prev_keystate.IsKeyDown(Keys.A) || prev_padstate.DPad.Left == ButtonState.Pressed))
+                if (activeItem == 0 && ((prev_keystate.IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyDown(Keys.A)) || (prev_padstate.DPad.Left == ButtonState.Released && gamePadState.DPad.Left == ButtonState.Pressed)))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.A) && gamePadState.DPad.Left == ButtonState.Released)
+                    music_vol -= 0.1m;
+                    if (music_vol < 0)
                     {
-                        music_vol -= 0.1m;
-                        if (music_vol < 0)
-                        {
-                            music_vol = 0;
-                        }
-                        (buttons_options[0] as Button).setName(((int)(music_vol * 10)).ToString());
-                        current_theme.Volume = (float)music_vol;
+                        music_vol = 0;
                     }
+                    (buttons_options[0] as Button).setName(((int)(music_vol * 10)).ToString());
+                    current_theme.Volume = (float)music_vol;
                 }
 
                 //raise the sound effect volume
-                if (activeItem == 1 && (prev_keystate.IsKeyDown(Keys.D) || prev_padstate.DPad.Right == ButtonState.Pressed))
+                if (activeItem == 1 && ((prev_keystate.IsKeyUp(Keys.D) && Keyboard.GetState().IsKeyDown(Keys.D)) || (prev_padstate.DPad.Right == ButtonState.Released && gamePadState.DPad.Right == ButtonState.Pressed)))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.D) && gamePadState.DPad.Right == ButtonState.Released)
+                    sound_vol += 0.1m;
+                    if (sound_vol > 1)
                     {
-                        sound_vol += 0.1m;
-                        if (sound_vol > 1)
-                        {
-                            sound_vol = 1;
-                        }
-                        (buttons_options[1] as Button).setName(((int)(sound_vol * 10)).ToString());
+                        sound_vol = 1;
                     }
+                    (buttons_options[1] as Button).setName(((int)(sound_vol * 10)).ToString());
                 }
 
                 //lower the sound effect volume
-                if (activeItem == 1 && (prev_keystate.IsKeyDown(Keys.A) || prev_padstate.DPad.Left == ButtonState.Pressed))
+                if (activeItem == 1 && ((prev_keystate.IsKeyUp(Keys.A) && Keyboard.GetState().IsKeyDown(Keys.A)) || (prev_padstate.DPad.Left == ButtonState.Released && gamePadState.DPad.Left == ButtonState.Pressed)))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.A) && gamePadState.DPad.Left == ButtonState.Released)
+                    sound_vol -= 0.1m;
+                    if (sound_vol < 0)
                     {
-                        sound_vol -= 0.1m;
-                        if (sound_vol < 0)
-                        {
-                            sound_vol = 0;
-                        }
-                        (buttons_options[1] as Button).setName(((int)(sound_vol * 10)).ToString());
+                        sound_vol = 0;
                     }
+                    (buttons_options[1] as Button).setName(((int)(sound_vol * 10)).ToString());
                 }
 
                 //go back to the menu
-                if ((activeItem == 2 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed)) || prev_keystate.IsKeyDown(Keys.Back) || prev_padstate.Buttons.B == ButtonState.Pressed)
+                if ((activeItem == 2 && ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.A == ButtonState.Released && gamePadState.Buttons.A == ButtonState.Pressed))) || (prev_keystate.IsKeyUp(Keys.Back) && Keyboard.GetState().IsKeyDown(Keys.Back)) || (prev_padstate.Buttons.B == ButtonState.Released && gamePadState.Buttons.B == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released && Keyboard.GetState().IsKeyUp(Keys.Back) && gamePadState.Buttons.B == ButtonState.Released)
-                    {
-                        gameState = GameState.startScreen;
-                        activeItem = 0;
-                    }
+                    gameState = GameState.startScreen;
+                    activeItem = 0;
                 }
             }
 
