@@ -9,6 +9,8 @@
 */
 
 /*TODO:
+*   Clean up all of the controls if they actually end up working
+*   Make Pausing an actual screen (add it to the gamestate enumeration)
 *   Implement previous states to both keyboard AND gamepad input
 *   Add Bombs
 *       -requires mouse inputs
@@ -50,8 +52,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using System.Collections;
 using System;
-using System.Threading;
-using System.Reflection;
+//using System.Reflection;
 
 namespace GameEngine
 {
@@ -136,17 +137,13 @@ namespace GameEngine
         //private Vector2 startButtonPosition;
         //private Vector2 exitButtonPosition;
         //private Vector2 resumeButtonPosition;
-
-        //Loading Stuff
-        //private Thread backgroundThread;
-        //private bool isLoading = false;
-
+        
         //Input Stuff
         GamePadState gamePadState;//current state of the controller inputs
         KeyboardState prev_keystate;//the previous state of the keyboard
         GamePadState prev_padstate;//the previous state of the gamepad
         //MouseState mouseState;//current state of the mouse inputs
-        //MouseState previousMouseState;//previous state of the mouse inputs
+        //MouseState prev_mouseState;//previous state of the mouse inputs
 
         //Sounds
         private SoundEffect bomb_s;//sound effect for bomb detonation
@@ -334,13 +331,13 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
 
-                if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
+                if ((prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.Start == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.Start == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                    {
+                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
+                    //{
                         gameState = GameState.startScreen;
                         activeItem = 0;
-                    }
+                    //}
                 }
             }
             //if the game is on the start screen
@@ -352,34 +349,34 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
                 
-                if (prev_keystate.IsKeyDown(Keys.S) || prev_padstate.DPad.Down == ButtonState.Pressed)
+                if ((prev_keystate.IsKeyUp(Keys.S) && prev_padstate.DPad.Down == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.S) || gamePadState.DPad.Down == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
-                    { 
+                    //if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
+                    //{ 
                         activeItem++;
                         if (activeItem > buttons_menu.Count - 1)
                         {
                             activeItem = 0;
                         }
-                    }
+                    //}
                 }
-                else if (prev_keystate.IsKeyDown(Keys.W) || prev_padstate.DPad.Up == ButtonState.Pressed)
+                else if ((prev_keystate.IsKeyUp(Keys.W) && prev_padstate.DPad.Up == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.W) || gamePadState.DPad.Up == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.W) && gamePadState.DPad.Up == ButtonState.Released)
-                    {
+                    //if (Keyboard.GetState().IsKeyUp(Keys.W) && gamePadState.DPad.Up == ButtonState.Released)
+                    //{
                         activeItem--;
                         if (activeItem < 0)
                         {
                             activeItem = buttons_menu.Count - 1;
                         }
-                    }
+                    //}
                 }
                 
                 //initializes the level
-                if (activeItem == 0 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed))
+                if ((activeItem == 0 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
-                    {
+                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
+                    //{
                         score = 0;//inital score is set (default = 0)
                         level = 1;//initial level is set (default = 1)
                         power = 3;//initial player power level is set (default = 3)
@@ -396,26 +393,26 @@ namespace GameEngine
                         current_theme.IsLooped = true;
                         current_theme.Volume = (float)music_vol;
                         current_theme.Play();
-                    }
+                    //}
                 }
 
                 //go to options screen
-                if (activeItem == 1 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed))
+                else if ((activeItem == 1 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
-                    {
+                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
+                    //{
                         gameState = GameState.optionsScreen;
                         activeItem = 0;
-                    }
+                    //}
                 }
 
                 //go to credit screen
-                if (activeItem == 2 && (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.A == ButtonState.Pressed))
+                else if ((activeItem == 2 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
-                    {
+                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.A == ButtonState.Released)
+                    //{
                         gameState = GameState.creditScreen;
-                    }
+                    //}
                 }
             }
             else if (gameState == GameState.gameScreen)
@@ -530,23 +527,19 @@ namespace GameEngine
                     //move the ship
                     craft.move();
                     checkCollisions();//sees if objects hit each other
-                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Pressed && gamePadState.Buttons.Start == ButtonState.Released))
-                        //if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
+
+                    //pause the game
+                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
                     {
-                        //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                        //{
-                            isPaused = true;
-                        //}
+                        isPaused = true;
                     }
                 }
                 else
                 {
-                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Pressed && gamePadState.Buttons.Start == ButtonState.Released))
+                    //un-pause the game
+                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
                     {
-                        //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                        //{
-                            isPaused = false;
-                        //}
+                        isPaused = false;
                     }
                 }
             }
@@ -558,13 +551,13 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
 
-                if (prev_keystate.IsKeyDown(Keys.Enter) || prev_padstate.Buttons.Start == ButtonState.Pressed)
+                if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
-                    { 
+                    //if (Keyboard.GetState().IsKeyUp(Keys.Enter) && gamePadState.Buttons.Start == ButtonState.Released)
+                    //{ 
                         gameState = GameState.startScreen;
                         activeItem = 0;
-                    }
+                    //}
                 }
             }
             else if (gameState == GameState.optionsScreen)
@@ -576,16 +569,16 @@ namespace GameEngine
                 }
 
                 //scroll through the button options
-                if (prev_keystate.IsKeyDown(Keys.S) || prev_padstate.DPad.Down == ButtonState.Pressed)
+                if ((prev_keystate.IsKeyUp(Keys.S) && Keyboard.GetState().IsKeyDown(Keys.S)) || (prev_padstate.DPad.Down == ButtonState.Released && gamePadState.DPad.Down == ButtonState.Pressed))
                 {
-                    if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
-                    {
+                    //if (Keyboard.GetState().IsKeyUp(Keys.S) && gamePadState.DPad.Down == ButtonState.Released)
+                    //{
                         activeItem++;
                         if (activeItem > buttons_options.Count - 1)
                         {
                             activeItem = 0;
                         }
-                    }
+                    //}
                 }
                 else if (prev_keystate.IsKeyDown(Keys.W) || prev_padstate.DPad.Up == ButtonState.Pressed)
                 {
