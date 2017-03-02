@@ -125,6 +125,7 @@ namespace GameEngine
             gameScreen,//screen state for the gameplay
             creditScreen,//screen state for the credits
             optionsScreen,//screen state for the options menu
+            pauseScreen,//screen state for the pause menu
         }
         GameState gameState;//current state of the game
 
@@ -331,7 +332,7 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
 
-                if ((prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.Start == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.Start == ButtonState.Pressed))
+                if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
                 {
                     gameState = GameState.startScreen;
                     activeItem = 0;
@@ -346,7 +347,7 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
                 
-                if ((prev_keystate.IsKeyUp(Keys.S) && prev_padstate.DPad.Down == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.S) || gamePadState.DPad.Down == ButtonState.Pressed))
+                if ((prev_keystate.IsKeyUp(Keys.S) && Keyboard.GetState().IsKeyDown(Keys.S)) || ( prev_padstate.DPad.Down == ButtonState.Released &&  gamePadState.DPad.Down == ButtonState.Pressed))
                 {
                     activeItem++;
                     if (activeItem > buttons_menu.Count - 1)
@@ -354,7 +355,7 @@ namespace GameEngine
                         activeItem = 0;
                     }
                 }
-                else if ((prev_keystate.IsKeyUp(Keys.W) && prev_padstate.DPad.Up == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.W) || gamePadState.DPad.Up == ButtonState.Pressed))
+                else if ((prev_keystate.IsKeyUp(Keys.W) && Keyboard.GetState().IsKeyDown(Keys.W)) || (prev_padstate.DPad.Up == ButtonState.Released && gamePadState.DPad.Up == ButtonState.Pressed))
                 {
                     activeItem--;
                     if (activeItem < 0)
@@ -364,7 +365,7 @@ namespace GameEngine
                 }
                 
                 //initializes the level
-                if ((activeItem == 0 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
+                if (activeItem == 0 && ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.A == ButtonState.Released && gamePadState.Buttons.A == ButtonState.Pressed)))
                 {
                     score = 0;//inital score is set (default = 0)
                     level = 1;//initial level is set (default = 1)
@@ -385,22 +386,22 @@ namespace GameEngine
                 }
 
                 //go to options screen
-                else if ((activeItem == 1 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
+                else if (activeItem == 1 && ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.A == ButtonState.Released && gamePadState.Buttons.A == ButtonState.Pressed)))
                 {
                     gameState = GameState.optionsScreen;
                     activeItem = 0;
                 }
 
                 //go to credit screen
-                else if ((activeItem == 2 && prev_keystate.IsKeyUp(Keys.Enter) && prev_padstate.Buttons.A == ButtonState.Released) && (Keyboard.GetState().IsKeyDown(Keys.Enter) || gamePadState.Buttons.A == ButtonState.Pressed))
+                else if (activeItem == 2 && ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.A == ButtonState.Released && gamePadState.Buttons.A == ButtonState.Pressed)))
                 {
                     gameState = GameState.creditScreen;
                 }
             }
             else if (gameState == GameState.gameScreen)
             {
-                if (!isPaused)
-                {
+                //if (!isPaused)
+                //{
                     if ((aliens.Count < 1 && boss.Count < 1) && power > 0)
                     {//starts the next level
                         level++;//game level increases
@@ -513,17 +514,18 @@ namespace GameEngine
                     //pause the game
                     if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
                     {
-                        isPaused = true;
+                    gameState = GameState.pauseScreen;
+                        //isPaused = true;
                     }
-                }
-                else
-                {
+                //}
+                //else
+               // {
                     //un-pause the game
-                    if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
-                    {
-                        isPaused = false;
-                    }
-                }
+                   // if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
+                    //{
+                        //isPaused = false;
+                    //}
+                //}
             }
             else if (gameState == GameState.creditScreen)
             {
@@ -533,7 +535,7 @@ namespace GameEngine
                     (stars[ii] as Star).move();//moves the star
                 }
 
-                if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
+                if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed) || (prev_keystate.IsKeyUp(Keys.Back) && Keyboard.GetState().IsKeyDown(Keys.Back)) || (prev_padstate.Buttons.B == ButtonState.Released && gamePadState.Buttons.B == ButtonState.Pressed))
                 {
                     gameState = GameState.startScreen;
                     activeItem = 0;
@@ -617,6 +619,14 @@ namespace GameEngine
                     gameState = GameState.startScreen;
                     activeItem = 0;
                 }
+            }
+            else if (gameState == GameState.pauseScreen)
+            {
+                if ((prev_keystate.IsKeyUp(Keys.Enter) && Keyboard.GetState().IsKeyDown(Keys.Enter)) || (prev_padstate.Buttons.Start == ButtonState.Released && gamePadState.Buttons.Start == ButtonState.Pressed))
+                {
+                    gameState = GameState.gameScreen;
+                }
+
             }
 
             prev_keystate = Keyboard.GetState();
@@ -871,6 +881,17 @@ namespace GameEngine
                 }
                 spriteBatch.DrawString(font, music_vol.ToString(), new Vector2(bwidth / 2, bheight / 2 - 150), Color.White, 0, (font.MeasureString(music_vol.ToString()) / 2), 1.0f, SpriteEffects.None, 0.5f);
                 spriteBatch.DrawString(font, sound_vol.ToString(), new Vector2(bwidth / 2, bheight / 2 - 50), Color.White, 0, (font.MeasureString(sound_vol.ToString()) / 2), 1.0f, SpriteEffects.None, 0.5f);
+
+
+                spriteBatch.End();
+            }
+            else if(gameState == GameState.pauseScreen)
+            {
+                // TODO: Add your drawing code here
+                spriteBatch.Begin();
+                spriteBatch.Draw(starpic, new Rectangle(bwidth / 2 - bwidth / 4, bheight / 2 - bheight / 4, bwidth / 2, bheight / 2), Color.White);
+                spriteBatch.Draw(starpic, new Rectangle(bwidth / 2 - bwidth / 4 + 5, bheight / 2 - bheight / 4 + 5, bwidth / 2 - 10, bheight / 2 - 10), Color.Black);
+
 
 
                 spriteBatch.End();
